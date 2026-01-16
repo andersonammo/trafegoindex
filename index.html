@@ -6,7 +6,6 @@
     <title>Leads Óticas Ammo - Banco de Dados Local</title>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <style>
-        /* --- CORES DA MARCA (AMMO) --- */
         :root {
             --ammo-black: #121212;
             --ammo-yellow: #FFD700;
@@ -17,7 +16,6 @@
             --danger-red: #ff4444;
         }
 
-        /* --- ESTILOS GERAIS --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--ammo-black);
@@ -39,15 +37,13 @@
             border: 1px solid #333;
         }
 
-        /* Destaques em Amarelo */
-        h1, h2, .highlight {
+        h1, h2 {
             color: var(--ammo-yellow);
             text-transform: uppercase;
             text-align: center;
             letter-spacing: 1px;
         }
 
-        /* --- FORMULÁRIO --- */
         label {
             display: block;
             margin-top: 15px;
@@ -65,7 +61,6 @@
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 16px;
-            transition: 0.2s;
         }
 
         input:focus, select:focus {
@@ -74,7 +69,6 @@
             background-color: #444;
         }
 
-        /* --- BOTÕES --- */
         .btn {
             background-color: var(--ammo-yellow);
             color: var(--ammo-black);
@@ -87,40 +81,30 @@
             margin-top: 25px;
             font-size: 16px;
             text-transform: uppercase;
-            transition: transform 0.2s, background-color 0.2s;
         }
 
-        .btn:hover {
-            background-color: #e6c200;
-            transform: translateY(-2px);
-        }
+        .btn:hover { background-color: #e6c200; }
 
-        .btn-whatsapp {
-            background-color: var(--success-green);
+        .btn-report {
+            background-color: #1a73e8;
             color: white;
-            margin-top: 10px;
+            margin-top: 15px;
         }
-        
-        .btn-whatsapp:hover { background-color: #1ebc57; }
 
         .btn-clear {
-            background-color: var(--ammo-dark-grey);
+            background-color: transparent;
             border: 1px solid var(--danger-red);
             color: var(--danger-red);
             margin-top: 10px;
             font-size: 14px;
             padding: 10px;
         }
-        
-        .btn-clear:hover { background-color: var(--danger-red); color: white; }
 
-        /* --- TABELA --- */
         .table-wrapper {
             max-height: 400px;
             overflow-y: auto;
             margin-top: 20px;
             border: 1px solid #444;
-            border-radius: 6px;
         }
 
         table {
@@ -142,20 +126,8 @@
             top: 0;
         }
 
-        tr:hover { background-color: #333; }
-
-        /* --- UTILITÁRIOS --- */
         .hidden { display: none; }
         
-        .status-bar {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-            border-top: 1px solid #333;
-            padding-top: 10px;
-        }
-
         .user-info {
             background: rgba(255, 215, 0, 0.1);
             padding: 10px;
@@ -170,299 +142,159 @@
 
     <div class="container" id="setupScreen">
         <h1>Configuração Inicial</h1>
-        <p style="text-align: center; color: #aaa;">Identifique-se para iniciar o cadastro</p>
-        
         <label>Nome do Colaborador:</label>
         <input type="text" id="colaboradorNome" placeholder="Seu nome">
-
         <label>Nome da Unidade/Ótica:</label>
         <input type="text" id="oticaNome" placeholder="Ex: Ammo Centro">
-
-        <button class="btn" onclick="salvarConfiguracaoEEntrar()">Entrar no Sistema</button>
+        <button class="btn" onclick="entrar()">Acessar Sistema</button>
     </div>
 
     <div class="container hidden" id="mainScreen">
-        
         <div class="user-info">
-            <span style="color: var(--ammo-yellow); font-weight: bold;">👤 Colaborador:</span> <span id="displayColaborador"></span> | 
-            <span style="color: var(--ammo-yellow); font-weight: bold;">🏢 Unidade:</span> <span id="displayOtica"></span>
-            <br>
-            <a href="#" onclick="trocarUsuario()" style="font-size: 11px; color: #888; text-decoration: none; margin-top: 5px; display: inline-block;">(Alterar Usuário)</a>
+            <span id="displayColaborador"></span> | <span id="displayOtica"></span>
         </div>
 
         <h1>Cadastro de Lead</h1>
 
         <form id="leadForm">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div style="grid-column: span 2;">
-                    <label>Nome do Cliente *</label>
-                    <input type="text" id="nome" required>
-                </div>
+            <label>Nome do Cliente *</label>
+            <input type="text" id="nome" required>
 
-                <div>
-                    <label>Telefone (WhatsApp) *</label>
-                    <input type="tel" id="telefone" placeholder="(41) 99..." required>
-                </div>
+            <label>Telefone *</label>
+            <input type="tel" id="telefone" required>
 
-                <div>
-                    <label>Canal de Captura *</label>
-                    <select id="canal" required>
-                        <option value="">Selecione...</option>
-                        <option value="Instagram">Instagram</option>
-                        <option value="Facebook">Facebook</option>
-                        <option value="Google Ads">Google Ads</option>
-                        <option value="TikTok">TikTok</option>
-                        <option value="Indicação">Indicação</option>
-                    </select>
-                </div>
-            </div>
+            <label>Canal de Captura *</label>
+            <select id="canal" required>
+                <option value="">Selecione...</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Google Ads">Google Ads</option>
+                <option value="TikTok">TikTok</option>
+                <option value="Indicação">Indicação</option>
+            </select>
 
             <label>Produto de Interesse *</label>
-            <input type="text" id="produto" placeholder="Ex: Multifocal, Solar..." required>
+            <input type="text" id="produto" required>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div>
-                    <label>Orçamento (R$) *</label>
-                    <input type="number" id="orcamento" step="0.01" required>
-                </div>
-                <div>
-                    <label>Comprou? *</label>
-                    <select id="comprou" onchange="verificarCompra()" required>
-                        <option value="Não">Não</option>
-                        <option value="Sim">Sim</option>
-                    </select>
-                </div>
-            </div>
+            <label>Orçamento (R$) *</label>
+            <input type="number" id="orcamento" step="0.01" required>
 
-            <label>Objeção (Motivo se não comprou) *</label>
-            <input type="text" id="objecao" placeholder="Ex: Preço, Vai pensar..." required>
+            <label>Comprou? *</label>
+            <select id="comprou" onchange="verificarCompra()" required>
+                <option value="Não">Não</option>
+                <option value="Sim">Sim</option>
+            </select>
 
             <div id="divValorVenda" class="hidden">
-                <label style="color: var(--success-green);">Valor Final da Venda (R$) *</label>
-                <input type="number" id="valorVenda" step="0.01" style="border-color: var(--success-green);">
+                <label>Valor da Venda (R$) *</label>
+                <input type="number" id="valorVenda" step="0.01">
             </div>
+
+            <label>Objeção do Cliente *</label>
+            <input type="text" id="objecao" required>
 
             <button type="submit" class="btn">💾 Salvar Lead</button>
         </form>
 
-        <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
-
-        <h2>Banco de Dados</h2>
-        
         <div class="table-wrapper">
-            <table id="tabelaLeads">
+            <table>
                 <thead>
                     <tr>
-                        <th width="15%">Data</th>
-                        <th width="25%">Nome</th>
-                        <th width="20%">Canal</th>
-                        <th width="10%">Comprou</th>
-                        <th width="15%">Venda</th>
-                        <th width="15%">Ação</th>
+                        <th>Data</th>
+                        <th>Nome</th>
+                        <th>Canal</th>
+                        <th>Venda</th>
                     </tr>
                 </thead>
-                <tbody id="tabelaBody">
-                    </tbody>
+                <tbody id="tabelaBody"></tbody>
             </table>
         </div>
 
-        <button class="btn btn-whatsapp" onclick="gerarRelatorioExcel()">
-            📊 Baixar Excel e Enviar no WhatsApp
+        <button class="btn btn-report" onclick="baixarRelatorio()">
+            📊 Gerar Relatório Excel (.xlsx)
         </button>
         
         <button class="btn btn-clear" onclick="limparTudo()">
-            🗑️ Apagar Todo o Histórico
+            🗑️ Limpar Banco de Dados
         </button>
-
-        <div class="status-bar">
-            Status: <span id="statusDb" style="color: var(--success-green)">Sistema Ativo</span> | 
-            <span id="totalRegistros">0</span> registros salvos na memória deste navegador.
-        </div>
     </div>
 
     <script>
-        // --- 1. CARREGAMENTO INICIAL DOS DADOS ---
-        // Aqui está o segredo: localStorage.getItem busca os dados salvos anteriormente
         let leads = JSON.parse(localStorage.getItem('db_leads_ammo')) || [];
-        let configUsuario = JSON.parse(localStorage.getItem('cfg_usuario_ammo')) || {};
+        let config = JSON.parse(localStorage.getItem('cfg_usuario_ammo')) || {};
 
-        // Inicia o sistema verificando se já tem usuário
-        window.onload = function() {
-            if (configUsuario.colaborador && configUsuario.otica) {
-                mostrarTelaPrincipal();
-            } else {
-                document.getElementById('setupScreen').classList.remove('hidden');
+        window.onload = () => {
+            if (config.colaborador) {
+                document.getElementById('setupScreen').classList.add('hidden');
+                document.getElementById('mainScreen').classList.remove('hidden');
+                document.getElementById('displayColaborador').innerText = config.colaborador;
+                document.getElementById('displayOtica').innerText = config.otica;
+                atualizarTabela();
             }
-            atualizarTabela();
         };
 
-        // --- 2. FUNÇÕES DE USUÁRIO ---
-        function salvarConfiguracaoEEntrar() {
-            const colab = document.getElementById('colaboradorNome').value;
-            const otica = document.getElementById('oticaNome').value;
-
-            if (!colab || !otica) {
-                alert("Preencha todos os campos de identificação.");
-                return;
-            }
-
-            configUsuario = { colaborador: colab, otica: otica };
-            localStorage.setItem('cfg_usuario_ammo', JSON.stringify(configUsuario));
-            mostrarTelaPrincipal();
+        function entrar() {
+            const c = document.getElementById('colaboradorNome').value;
+            const o = document.getElementById('oticaNome').value;
+            if(!c || !o) return alert("Preencha tudo!");
+            config = { colaborador: c, otica: o };
+            localStorage.setItem('cfg_usuario_ammo', JSON.stringify(config));
+            location.reload();
         }
 
-        function mostrarTelaPrincipal() {
-            document.getElementById('setupScreen').classList.add('hidden');
-            document.getElementById('mainScreen').classList.remove('hidden');
-            document.getElementById('displayColaborador').innerText = configUsuario.colaborador;
-            document.getElementById('displayOtica').innerText = configUsuario.otica;
-        }
-
-        function trocarUsuario() {
-            if(confirm("Deseja alterar o nome do colaborador?")) {
-                localStorage.removeItem('cfg_usuario_ammo');
-                location.reload();
-            }
-        }
-
-        // --- 3. LÓGICA DO FORMULÁRIO ---
         function verificarCompra() {
-            const comprou = document.getElementById('comprou').value;
-            const divVenda = document.getElementById('divValorVenda');
-            const inputVenda = document.getElementById('valorVenda');
-
-            if (comprou === 'Sim') {
-                divVenda.classList.remove('hidden');
-                inputVenda.required = true;
-            } else {
-                divVenda.classList.add('hidden');
-                inputVenda.required = false;
-                inputVenda.value = "";
-            }
+            const div = document.getElementById('divValorVenda');
+            div.classList.toggle('hidden', document.getElementById('comprou').value !== 'Sim');
         }
 
-        document.getElementById('leadForm').addEventListener('submit', function(e) {
+        document.getElementById('leadForm').addEventListener('submit', (e) => {
             e.preventDefault();
-
-            // Captura data atual
-            const agora = new Date();
-            
-            const novoLead = {
-                id: Date.now(), // ID único
-                data: agora.toLocaleDateString('pt-BR'),
-                hora: agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}),
-                colaborador: configUsuario.colaborador,
-                unidade: configUsuario.otica,
-                nome: document.getElementById('nome').value,
-                telefone: document.getElementById('telefone').value,
-                canal: document.getElementById('canal').value,
-                produto: document.getElementById('produto').value,
-                orcamento: parseFloat(document.getElementById('orcamento').value || 0),
-                comprou: document.getElementById('comprou').value,
-                valorVenda: parseFloat(document.getElementById('valorVenda').value || 0),
-                objecao: document.getElementById('objecao').value
+            const novo = {
+                Data: new Date().toLocaleDateString('pt-BR'),
+                Colaborador: config.colaborador,
+                Unidade: config.otica,
+                Nome: document.getElementById('nome').value,
+                Telefone: document.getElementById('telefone').value,
+                Canal: document.getElementById('canal').value,
+                Produto: document.getElementById('produto').value,
+                Orcamento: document.getElementById('orcamento').value,
+                Comprou: document.getElementById('comprou').value,
+                ValorVenda: document.getElementById('valorVenda').value || 0,
+                Objecao: document.getElementById('objecao').value
             };
-
-            // Adiciona ao array e SALVA NA MEMÓRIA
-            leads.push(novoLead);
-            salvarDados();
-
-            // Feedback visual e limpeza
+            leads.push(novo);
+            localStorage.setItem('db_leads_ammo', JSON.stringify(leads));
             document.getElementById('leadForm').reset();
-            document.getElementById('comprou').value = "Não";
             verificarCompra();
-            alert("✅ Lead cadastrado e salvo com sucesso!");
+            atualizarTabela();
+            alert("Lead Salvo!");
         });
 
-        // --- 4. PERSISTÊNCIA E TABELA ---
-        function salvarDados() {
-            // Esta linha garante que os dados fiquem salvos mesmo fechando a aba
-            localStorage.setItem('db_leads_ammo', JSON.stringify(leads));
-            atualizarTabela();
-        }
-
         function atualizarTabela() {
-            const tbody = document.getElementById('tabelaBody');
-            tbody.innerHTML = "";
-            
-            // Mostra do mais recente para o mais antigo
-            const listaInvertida = leads.slice().reverse();
-
-            listaInvertida.forEach(lead => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-size: 12px; color: #888;">${lead.data}<br>${lead.hora}</td>
-                    <td>${lead.nome}<br><small style="color: #aaa">${lead.telefone}</small></td>
-                    <td>${lead.canal}</td>
-                    <td style="color: ${lead.comprou === 'Sim' ? 'var(--success-green)' : 'white'}">${lead.comprou}</td>
-                    <td>${lead.valorVenda > 0 ? 'R$ ' + lead.valorVenda.toFixed(2) : '-'}</td>
-                    <td>
-                        <button onclick="excluirLead(${lead.id})" style="background:transparent; border:none; cursor:pointer; font-size:16px;">❌</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById('totalRegistros').innerText = leads.length;
+            const body = document.getElementById('tabelaBody');
+            body.innerHTML = leads.map(l => `
+                <tr>
+                    <td>${l.Data}</td>
+                    <td>${l.Nome}</td>
+                    <td>${l.Canal}</td>
+                    <td>R$ ${l.ValorVenda}</td>
+                </tr>
+            `).join('');
         }
 
-        function excluirLead(id) {
-            if(confirm("Deseja excluir este registro específico?")) {
-                leads = leads.filter(l => l.id !== id);
-                salvarDados();
-            }
+        function baixarRelatorio() {
+            if (leads.length === 0) return alert("Sem dados!");
+            const ws = XLSX.utils.json_to_sheet(leads);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Leads");
+            XLSX.writeFile(wb, `Relatorio_Ammo_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
 
         function limparTudo() {
-            if(confirm("⚠️ ATENÇÃO: Isso apagará TODOS os leads salvos neste computador.\n\nTem certeza absoluta?")) {
-                leads = [];
-                salvarDados();
-                alert("Banco de dados limpo.");
+            if(confirm("Apagar tudo permanentemente?")) {
+                localStorage.removeItem('db_leads_ammo');
+                location.reload();
             }
-        }
-
-        // --- 5. EXCEL E WHATSAPP ---
-        function gerarRelatorioExcel() {
-            if (leads.length === 0) {
-                alert("Não há dados para gerar relatório.");
-                return;
-            }
-
-            // Prepara dados para o Excel (formatação bonita)
-            const dadosExcel = leads.map(l => ({
-                "Data": l.data,
-                "Hora": l.hora,
-                "Colaborador": l.colaborador,
-                "Unidade": l.unidade,
-                "Cliente": l.nome,
-                "Telefone": l.telefone,
-                "Canal": l.canal,
-                "Produto": l.produto,
-                "Orçamento": l.orcamento,
-                "Comprou": l.comprou,
-                "Venda (R$)": l.valorVenda,
-                "Objeção": l.objecao
-            }));
-
-            const ws = XLSX.utils.json_to_sheet(dadosExcel);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Leads Ammo");
-
-            const nomeArquivo = `Relatorio_Ammo_${new Date().toISOString().slice(0,10)}.xlsx`;
-            XLSX.writeFile(wb, nomeArquivo);
-
-            // Link WhatsApp
-            const phone = "5541996509734";
-            const msg = encodeURIComponent(
-                `Olá! Segue relatório atualizado.\n` +
-                `👤 Colaborador: *${configUsuario.colaborador}*\n` +
-                `📅 Total Acumulado: *${leads.length} leads*\n` +
-                `📂 O arquivo Excel foi baixado no computador.`
-            );
-
-            setTimeout(() => {
-                window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
-            }, 1500);
         }
     </script>
 </body>
